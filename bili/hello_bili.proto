@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package test;
+
+
+service Bili {
+  rpc HelloDewei(HelloDeweiReq) returns (HelloDeweiReply){}
+  // lesson 3
+  rpc HelloTest(stream HelloTestRequest) returns (stream HelloTestResponse){}
+  // lesson 4
+  // 客户端请求服务器（非流）
+  // 服务器返回流
+  rpc TestClientRecvStream(TestClientRecvStreamRequest) returns (stream TestClientRecvStreamResponse){}
+  // lesson 5
+  // 客户端请求服务器（非流）
+  // 服务器返回流
+  rpc TestClientSendStream(stream TestClientSendStreamRequest) returns (TestClientSendStreamResponse){}
+  // lesson 6
+  // 双向流
+  rpc TestTwoWayStream(stream TestTwoWayStreamRequest) returns (stream TestTwoWayStreamResponse){}
+
+}
+
+// 传输方式
+// 1: unary 单程
+// 2: stream 1: 双向 客户端 请求服务器（流），服务端返回给客户端（流）
+//           2: 单向 客户端 请求服务器（流），服务端返回给客户端（非流）
+//           3: 单向 客户端 请求服务器（非流），服务端返回给客户端（流）
+
+message HelloDeweiReq{
+  // = 1: 第1个参数
+  string name = 1;
+  int32 age = 2;
+}
+
+message HelloDeweiReply{
+  string result = 1;
+}
+
+
+message HelloTestRequest{
+  string name = 1;
+  int64 age = 2;
+  // repeated: 数组
+  // proto 里 最好数组里都是一个格式
+  repeated string data = 3;
+  // 这里相当于局部变量，也可以丢到外面，就可以给很多人用
+  message HelloTestRequestNumberValue {
+    string name = 1;
+    int32 age = 2;
+    bool is_active = 3;
+  }
+  map<string, HelloTestRequestNumberValue> number = 4; // string, int32, bool
+}
+
+
+// 这里结构体里写空，不返回任何数值
+message HelloTestResponse{}
+
+
+// lesson 4
+message TestClientRecvStreamRequest {
+  string data = 1;
+}
+message TestClientRecvStreamResponse {
+  //  string result = 1;
+  int32 code = 1;
+  string msg = 2;
+  string name = 3;
+  int32 age = 4;
+}
+
+// lesson 5
+message TestClientSendStreamRequest {
+  string data = 1;
+}
+message TestClientSendStreamResponse {
+  string result = 1;
+}
+
+// lesson 6
+message TestTwoWayStreamRequest{
+  string data = 1;
+}
+
+message TestTwoWayStreamResponse{
+  string result = 1;
+}
